@@ -8,10 +8,12 @@ def create_pi(n):
     #create file
     dataset = open("input/Meta-Event.txt", "w")
     for i in range(n):
+        id = str(i)
         name = "pi" + str(i)
-        table = random.randint(1, 10)
-        test = random.choice(["sick", "not-sick"])
-        dataset.write(f"{name} {table} {test}\n")
+        table = random.randint(1, int(n/10)) # Max 10 people per table, randomly assigned
+        options = ["sick", "not-sick"]
+        test = random.choices(options, weights=[0.3, 0.7], k=1)[0]
+        dataset.write(f"{id} {name} {table} {test}\n")
     dataset.close()
 
 # In the file Meta-Event-No-Disclosure, each person pi has the same attributes such as the
@@ -27,7 +29,7 @@ def create_pi_no_disclosure():
     # remove health status
     for line in meta_event_lines:
         line = line.split()
-        dataset.write(f"{line[0]} {line[1]}\n")
+        dataset.write(f"{line[0]} {line[1]} {line[2]}\n")
     dataset.close()
     
 
@@ -44,11 +46,14 @@ def create_reported_illnesses():
     # pull sick people from meta-event pi.test=sick
     for line in meta_event_lines:
         line = line.split()
-        if line[2] == "sick":
-            dataset.write(f"{line[0]} {line[2]}\n")
+        if line[3] == 'sick':
+            dataset.write(f"{line[0]} {line[3]}\n")
     dataset.close()
 
 
-create_pi(100)
+create_pi(500)
+print("Created Meta-Event.txt!")
 create_pi_no_disclosure()
+print("Created Meta-Event-No-Disclosure.txt!")
 create_reported_illnesses()
+print("Created Reported-Illnesses.txt!")
